@@ -26,49 +26,49 @@ function Footer() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ color: 'black' }}>
             Quick Links
           </Typography>
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <Link href="/about" variant="body2" color="textSecondary" underline="none">
+              <Link href="/about" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 About
               </Link>
             </Grid>
             <Grid item xs={6}>
-              <Link href="/support" variant="body2" color="textSecondary" underline="none">
+              <Link href="/support" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 Support
               </Link>
             </Grid>
             <Grid item xs={6}>
-              <Link href="/gallery" variant="body2" color="textSecondary" underline="none">
+              <Link href="/gallery" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 Gallery
               </Link>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ color: 'black' }}>
             Legal
           </Typography>
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <Link href="/privacy" variant="body2" color="textSecondary" underline="none">
+              <Link href="/privacy" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 Privacy Policy
               </Link>
             </Grid>
             <Grid item xs={6}>
-              <Link href="/terms" variant="body2" color="textSecondary" underline="none">
+              <Link href="/terms" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 Terms of Use
               </Link>
             </Grid>
             <Grid item xs={6}>
-              <Link href="/refunds" variant="body2" color="textSecondary" underline="none">
+              <Link href="/refunds" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 Sales and Refunds
               </Link>
             </Grid>
             <Grid item xs={6}>
-              <Link href="/legal" variant="body2" color="textSecondary" underline="none">
+              <Link href="/legal" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
                 Legal
               </Link>
             </Grid>
@@ -76,20 +76,20 @@ function Footer() {
         </Grid>
       </Grid>
       <Box textAlign="center" mt={-8}>
-        <Link href="https://instagram.com" target="_blank" variant="body2" color="textSecondary" underline="none">
+        <Link href="https://instagram.com" target="_blank" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
           Instagram
         </Link>{' '}
         |{' '}
-        <Link href="https://facebook.com" target="_blank" variant="body2" color="textSecondary" underline="none">
+        <Link href="https://facebook.com" target="_blank" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
           Facebook
         </Link>{' '}
         |{' '}
-        <Link href="https://twitter.com" target="_blank" variant="body2" color="textSecondary" underline="none">
+        <Link href="https://twitter.com" target="_blank" variant="body2" sx={{ color: 'black', textDecoration: 'none' }}>
           Twitter
         </Link>
       </Box>
       <Box textAlign="center" mt={1}>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" sx={{ color: 'black' }}>
           © {new Date().getFullYear()} Crystal Elegance. All rights reserved.
         </Typography>
       </Box>
