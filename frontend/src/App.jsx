@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
+import Jewellery from './Components/Home/Jewellery';
+import Gems from './Components/Home/Gems';
+import AboutUs from './Components/Home/AboutUs';
+import Contact from './Components/Home/ContactUs';
 
 import AdminDashboard from './Components/Admin/AdminDashboard';
 import UserDetails from './Components/Admin/Users/UserDetails';
@@ -13,7 +17,7 @@ import UpdateUser from './Components/Admin/Users/UpdateUser';
 import JewelleryDetails from './Components/Admin/Jewellery/JewelleryDetails';
 import AddJewellery from './Components/Admin/Jewellery/AddJewellery';
 import UpdateJewellery from './Components/Admin/Jewellery/UpdateJewellery';
-import Jewellery from './Components/Admin/Jewellery/Jewellery';
+
 
 import InventoryDetails from './Components/Admin/Inventory/InventoryDetails'; 
 import AddInventory from './Components/Admin/Inventory/AddInventory'; 
@@ -41,10 +45,15 @@ function App() {
       <Routes>
 
         {/* Home Page as the default route */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />        
 
         {/* Login Page */}
         <Route path="/login" element={<Login />} />
+        <Route path='/jewellery' element={<Jewellery/>}/>
+        <Route path='/Gems' element={<Gems/>}/>
+        <Route path='/About' element={<AboutUs/>}/>
+        <Route path='Contact' element={<Contact/>}/>
+
 
         <Route path="/admindashboard" element={<AdminDashboard />}>
           <Route path="user-management" element={<UserDetails />} />
@@ -75,6 +84,8 @@ function App() {
           <Route path="feedback/:id" element={<Feedback />} /> 
           <Route path="add-feedback" element={<AddFeedback />} /> 
           <Route path="update-feedback/:id" element={<UpdateFeedback />} /> 
+
+          
 
         </Route>
         <Route path="/" element={<NotFound />} />

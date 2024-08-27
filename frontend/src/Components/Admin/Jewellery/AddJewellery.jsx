@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Box, Button, TextField, Typography } from '@mui/material';
@@ -5,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const URL = "http://localhost:4000/jewellery";
 
+// eslint-disable-next-line react/prop-types
 function AddJewellery({ onBack }) {
   const [image, setImage] = useState('');
   const [name, setName] = useState('');

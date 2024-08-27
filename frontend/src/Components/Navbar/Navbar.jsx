@@ -14,8 +14,8 @@ function Navbar() {
             <Button color="inherit" component={Link} to="/">Home</Button>
             <Button color="inherit" component={Link} to="/gems">Gems</Button>
             <Button color="inherit" component={Link} to="/jewellery">Jewellery</Button>
-            <Button color="inherit" component={Link} to="/about">About Us</Button>
-            <Button color="inherit" component={Link} to="/contact">Contact Us</Button>
+            <Button color="inherit" component={Link} to="/About">About Us</Button>
+            <Button color="inherit" component={Link} to="/Contact">Contact Us</Button>
           </Typography>
 
           {/* Right Side Items */}
