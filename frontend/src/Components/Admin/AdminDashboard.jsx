@@ -11,6 +11,7 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 const drawerWidth = 240;
 
@@ -30,6 +31,8 @@ function AdminDashboard() {
     { text: 'Appointment Management', icon: <EventIcon />, path: '/admindashboard/appointment-management' },
     { text: 'Order Management', icon: <ShoppingCartIcon />, path: '/admindashboard/order-management' },
     { text: 'Feedback Management', icon: <FeedbackIcon />, path: '/admindashboard/feedback-management' },
+    { text: 'Support Management', icon: <SupportAgentIcon />, path: '/admindashboard/support-management' },
+
   ];
 
   useEffect(() => {

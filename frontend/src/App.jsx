@@ -37,7 +37,24 @@ import Supplier from './Components/Admin/Suppliers/Supplier';
 import FeedbackDetails from './Components/Admin/Feedback/FeedbackDetails'; 
 import AddFeedback from './Components/Admin/Feedback/AddFeedback'; 
 import UpdateFeedback from './Components/Admin/Feedback/UpdateFeedback'; 
-import Feedback from './Components/Admin/Feedback/Feedback'; // 
+import Feedback from './Components/Admin/Feedback/Feedback'; 
+
+import SupportDetails from './Components/Admin/Support/SupportDetails'; 
+//import AddSupport from './Components/Admin/Support/AddSupport'; 
+//import UpdateSupport from './Components/Admin/Support/UpdateSupport'; 
+//import Support from './Components/Admin/Support/Support';
+
+import OrderDetails from './Components/Admin/Order/OrderDetails';
+//import AddOrder from './Components/Admin/Order/AddOrder';
+//import UpdateOrder from './Components/Admin/Order/UpdateOrder';
+//import Order from './Components/Admin/Order/Order';
+
+import AppointmentDetails  from './Components/Admin/Appointment/AppointmentDetails';
+//import AddAppointment from './Components/Admin/Appointment/AddAppointment';
+//import UpdateAppointment from './Components/Admin/Appointment/UpdateAppointment';
+//import Appointment from './Components/Admin/Appointment/Appointment';
+
+import Register from './Components/pages/Register';
 
 function App() {
   return (
@@ -52,7 +69,8 @@ function App() {
         <Route path='/jewellery' element={<Jewellery/>}/>
         <Route path='/Gems' element={<Gems/>}/>
         <Route path='/About' element={<AboutUs/>}/>
-        <Route path='Contact' element={<Contact/>}/>
+        <Route path='/Contact' element={<Contact/>}/>
+        <Route path='/signup' element={<Register/>}/>
 
 
         <Route path="/admindashboard" element={<AdminDashboard />}>
@@ -84,6 +102,14 @@ function App() {
           <Route path="feedback/:id" element={<Feedback />} /> 
           <Route path="add-feedback" element={<AddFeedback />} /> 
           <Route path="update-feedback/:id" element={<UpdateFeedback />} /> 
+
+          <Route path="support-management" element={<SupportDetails />} />
+
+          <Route path='Order-Management' element={<OrderDetails />} />
+
+          <Route path="appointment-management" element={<AppointmentDetails />} />
+
+
 
           
 
