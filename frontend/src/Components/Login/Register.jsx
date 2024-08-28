@@ -14,6 +14,7 @@ import Logo from '../Images/3.png';
 function Register() {
     const navigate = useNavigate();
     const [user, setUser] = useState({
+        userName: "", // Added userName
         name: "",
         email: "",
         phone: "",
@@ -44,9 +45,17 @@ function Register() {
             return;
         }
 
+        const userData = {
+            userName: user.userName, // Ensure userName is included
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            password: user.password
+        };
+
         try {
-            const response = await axios.post("http://localhost:4000/register", user);
-            if (response.data.status === "ok") {
+            const response = await axios.post("http://localhost:4000/users/register", userData);
+            if (response.data.message === "User created successfully") {
                 alert("Registration successful");
                 navigate('/login');
             } else {
@@ -71,6 +80,19 @@ function Register() {
                                 REGISTER
                             </Typography>
                             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+                                <TextField
+                                    fullWidth
+                                    placeholder="Username" // Changed placeholder
+                                    variant="outlined"
+                                    name="userName" // Changed name attribute
+                                    value={user.userName}
+                                    onChange={handleInputChange}
+                                    InputProps={{
+                                        startAdornment: <PersonIcon color="disabled" />,
+                                        sx: { backgroundColor: '#FDF2F2', borderRadius: 2 }
+                                    }}
+                                    sx={{ marginBottom: 2 }}
+                                />
                                 <TextField
                                     fullWidth
                                     placeholder="Name"

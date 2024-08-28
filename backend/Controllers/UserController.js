@@ -19,12 +19,13 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const userId = await generateUserId(); // Generate new user ID
+        const userId = await generateUserId();
         const newUser = new User({ userId, userName, name, email, password, phone, type });
         await newUser.save();
 
         res.status(201).json({ message: 'User created successfully', user: newUser });
     } catch (error) {
+        console.error('Error creating user:', error);
         res.status(500).json({ message: 'Error creating user', error });
     }
 };

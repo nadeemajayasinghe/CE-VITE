@@ -8,7 +8,7 @@ const User = require('../Model/UserModel');
 const UserController = require('../Controllers/UserController');
 
 // Define routes
-router.post('/', UserController.createUser); // POST /users
+router.post('/register', UserController.createUser); // POST /users
 router.get('/', UserController.getAllUsers);  // GET /users
 router.get('/:id', UserController.getUserById); // GET /users/:id
 router.put('/:id', UserController.updateUser); // PUT /users/:id

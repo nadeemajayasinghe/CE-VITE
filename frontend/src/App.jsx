@@ -8,6 +8,7 @@ import Jewellery from './Components/Home/Jewellery';
 import Gems from './Components/Home/Gems';
 import AboutUs from './Components/Home/AboutUs';
 import Contact from './Components/Home/ContactUs';
+import Register from './Components/Login/Register';
 
 import AdminDashboard from './Components/Admin/AdminDashboard';
 import UserDetails from './Components/Admin/Users/UserDetails';
@@ -54,7 +55,9 @@ import AppointmentDetails  from './Components/Admin/Appointment/AppointmentDetai
 //import UpdateAppointment from './Components/Admin/Appointment/UpdateAppointment';
 //import Appointment from './Components/Admin/Appointment/Appointment';
 
-import Register from './Components/pages/Register';
+
+
+
 
 function App() {
   return (
