@@ -13,6 +13,7 @@ const employeeRoutes = require('./Routes/EmployeeRoutes');
 const salaryRoutes = require('./Routes/SalaryRoutes');
 const supplierRoutes = require('./Routes/SupplierRoutes');
 const inventoryRoutes = require('./Routes/InventoryRoutes');
+const authRoutes = require('./Routes/AuthRoutes');
 
 // Middleware
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use('/employees', employeeRoutes);
 app.use('/salaries', salaryRoutes);
 app.use('/suppliers', supplierRoutes);
 app.use('/inventory', inventoryRoutes);
+app.use('/auth', authRoutes);
 
 // Serve static files (uploaded images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

@@ -1,4 +1,6 @@
 const User = require('../Model/UserModel'); // Adjust the path as needed
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // Generate user ID with leading zeros
 const generateUserId = async () => {
@@ -8,25 +10,48 @@ const generateUserId = async () => {
     return `U${newId}`; // Prefix with 'U' or any other identifier
 };
 
+// Login user
+// Login user
+exports.loginUser = async (req, res) => {
+    try {
+        const { name, password } = req.body;
+
+        // Find user by username or email
+        const user = await User.findOne({ $or: [{ userName: name }, { email: name }] });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Verify password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Send user details excluding password
+        const { password: pwd, ...userData } = user.toObject();
+        res.status(200).json({ user: userData });
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging in user', error: error.message });
+    }
+};
+
+
 // Create a new user
 exports.createUser = async (req, res) => {
     try {
         const { userName, name, email, password, phone, type } = req.body;
 
-        // Check if the user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const userId = await generateUserId();
-        const newUser = new User({ userId, userName, name, email, password, phone, type });
+        const userId = await generateUserId(); // Generate new user ID
+        const newUser = new User({ userId, userName, name, email, password: hashedPassword, phone, type });
         await newUser.save();
 
         res.status(201).json({ message: 'User created successfully', user: newUser });
     } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).json({ message: 'Error creating user', error });
+        res.status(500).json({ message: 'Error creating user', error: error.message });
     }
 };
 
@@ -36,7 +61,7 @@ exports.getAllUsers = async (req, res) => {
         const users = await User.find();
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving users', error });
+        res.status(500).json({ message: 'Error retrieving users', error: error.message });
     }
 };
 
@@ -49,7 +74,7 @@ exports.getUserById = async (req, res) => {
         }
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving user', error });
+        res.status(500).json({ message: 'Error retrieving user', error: error.message });
     }
 };
 
@@ -57,9 +82,16 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const { userName, name, email, password, phone, type } = req.body;
+        const updateData = { userName, name, email, phone, type };
+
+        // Only update password if provided
+        if (password) {
+            updateData.password = await bcrypt.hash(password, saltRounds);
+        }
+
         const updatedUser = await User.findOneAndUpdate(
             { userId: req.params.id }, // Use userId instead of _id
-            { userName, name, email, password, phone, type },
+            updateData,
             { new: true } // Return the updated user
         );
 
@@ -69,7 +101,7 @@ exports.updateUser = async (req, res) => {
 
         res.status(200).json({ message: 'User updated successfully', user: updatedUser });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating user', error });
+        res.status(500).json({ message: 'Error updating user', error: error.message });
     }
 };
 
@@ -83,6 +115,6 @@ exports.deleteUser = async (req, res) => {
 
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting user', error });
+        res.status(500).json({ message: 'Error deleting user', error: error.message });
     }
 };
