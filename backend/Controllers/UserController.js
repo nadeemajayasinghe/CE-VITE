@@ -1,6 +1,7 @@
 const User = require('../Model/UserModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const generateToken = require('../utils/generateToken');
 const saltRounds = 10;
 
 // Generate user ID with leading zeros
@@ -15,34 +16,82 @@ const generateUserId = async () => {
 exports.loginUser = async (req, res) => {
     try {
         const { name, password } = req.body;
-
-        // Find user by username or email
-        const user = await User.findOne({ $or: [{ userName: name }, { email: name }] });
+        const user = await User.findOne({ userName: name });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        // Verify password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
-
-        // Generate JWT token
         const token = jwt.sign(
-            {
-                userId: user._id,
-                role: user.role,
-            },
+            { userId: user._id, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
-
-        // Send the token and user details excluding password
         const { password: pwd, ...userData } = user.toObject();
         res.status(200).json({ success: true, token, user: userData });
     } catch (error) {
         res.status(500).json({ message: 'Error logging in user', error: error.message });
+    }
+};
+
+// Get user profile
+exports.getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findOne({ userId: req.user.userId }).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving user profile', error: error.message });
+    }
+};
+
+// Update user profile
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const { userName, name, email, phone, type, password } = req.body;
+        const updateData = { userName, name, email, phone, type };
+
+        if (password) {
+            updateData.password = await bcrypt.hash(password, saltRounds);
+        }
+
+        const updatedUser = await User.findOneAndUpdate(
+            { userId: req.user.userId },
+            updateData,
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating user profile', error: error.message });
+    }
+};
+
+// Change user password
+exports.changeUserPassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+        const user = await User.findOne({ userId: req.user.userId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Old password is incorrect' });
+        }
+        user.password = await bcrypt.hash(newPassword, saltRounds);
+        await user.save();
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error changing password', error: error.message });
     }
 };
 
@@ -51,15 +100,12 @@ exports.createUser = async (req, res) => {
     try {
         const { userName, name, email, password, phone, type } = req.body;
 
-        // Check if email or username already exists
         const existingUser = await User.findOne({ $or: [{ userName }, { email }] });
         if (existingUser) {
             return res.status(400).json({ message: 'Username or Email already exists' });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-
         const userId = await generateUserId();
         const newUser = new User({ userId, userName, name, email, password: hashedPassword, phone, type });
         await newUser.save();
@@ -73,7 +119,7 @@ exports.createUser = async (req, res) => {
 // Get all users
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password'); // Exclude password from the response
+        const users = await User.find().select('-password');
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving users', error: error.message });
@@ -83,7 +129,7 @@ exports.getAllUsers = async (req, res) => {
 // Get a single user by ID
 exports.getUserById = async (req, res) => {
     try {
-        const user = await User.findOne({ userId: req.params.id }).select('-password'); // Exclude password
+        const user = await User.findOne({ userId: req.params.id }).select('-password');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -99,7 +145,6 @@ exports.updateUser = async (req, res) => {
         const { userName, name, email, password, phone, type } = req.body;
         const updateData = { userName, name, email, phone, type };
 
-        // Only update password if provided
         if (password) {
             updateData.password = await bcrypt.hash(password, saltRounds);
         }
@@ -127,9 +172,30 @@ exports.deleteUser = async (req, res) => {
         if (!deletedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
-
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting user', error: error.message });
+    }
+};
+exports.updateUserProfile = async (req, res) => {
+    try {
+        // ...
+
+        const updatedUser = await User.findOneAndUpdate(
+            { userId: req.user.userId },
+            updateData,
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Update the user object in the AuthContext
+        req.user = updatedUser;
+
+        res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating user profile', error: error.message });
     }
 };

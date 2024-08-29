@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Auth/AuthContext';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import { Box, Button, Container, Grid, TextField, Typography, Paper, Divider } from '@mui/material';
@@ -10,6 +11,7 @@ import Logo from '../Images/3.png';
 
 function Login() {
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
     const [user, setUser] = useState({
         name: "",
         password: "",
@@ -25,7 +27,6 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await axios.post("http://localhost:4000/auth/login", {
                 name: user.name,
@@ -33,19 +34,21 @@ function Login() {
             });
 
             if (response.status === 200) {
-                alert("Login Successfully");
+                const { token, user: loggedInUser } = response.data;
 
-                // Check user type and redirect accordingly
-                if (response.data.user.type === "admin") {
+                login(token, loggedInUser);
+
+                if (loggedInUser.type === "admin") {
+                    alert("Admin Login Successful");
                     navigate("/admindashboard");
                 } else {
+                    alert("User Login Successful");
                     navigate("/userprofile");
                 }
             } else {
                 alert("Login Error: " + response.data.message);
             }
         } catch (err) {
-            // Handle different types of errors
             if (err.response && err.response.status === 404) {
                 alert("User not found");
             } else if (err.response && err.response.status === 400) {
@@ -85,6 +88,7 @@ function Login() {
                                         sx: { backgroundColor: '#FDF2F2', borderRadius: 2 }
                                     }}
                                     sx={{ marginBottom: 2 }}
+                                    aria-label="Username or Email"
                                 />
                                 <TextField
                                     fullWidth
@@ -99,6 +103,7 @@ function Login() {
                                         sx: { backgroundColor: '#FDF2F2', borderRadius: 2 }
                                     }}
                                     sx={{ marginBottom: 3 }}
+                                    aria-label="Password"
                                 />
                                 <Button
                                     type="submit"
