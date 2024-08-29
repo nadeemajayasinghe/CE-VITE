@@ -11,9 +11,7 @@ const generateJewelleryId = async () => {
 // Create a new jewellery item
 exports.createJewellery = async (req, res) => {
     try {
-        const { name, price, quantity, status, description } = req.body;
-        const image = req.file ? req.file.path : null; // Use uploaded image path if available
-
+        const {image, name, price, quantity, status, description } = req.body;
         const JID = await generateJewelleryId(); // Generate new jewellery ID
         const newJewellery = new Jewellery({ JID, name, price, quantity, status, image, description });
         await newJewellery.save();
@@ -52,8 +50,7 @@ exports.getJewelleryById = async (req, res) => {
 // Update a jewellery item by ID
 exports.updateJewellery = async (req, res) => {
     const id = req.params.id;
-    const { name, price, quantity, status, description } = req.body;
-    const image = req.file ? req.file.path : null; // Use uploaded image path if available
+    const { image ,name, price, quantity, status, description } = req.body;
 
     try {
         const updatedJewellery = await Jewellery.findByIdAndUpdate(
