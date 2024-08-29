@@ -21,7 +21,7 @@ function AboutUs() {
                 We are dedicated to giving you the very best of luxury with a focus on quality, customer service, and uniqueness.
               </Typography>
               <Typography variant="body1" paragraph>
-                Founded in 2024, Crystal Elegance has come a long way from its beginnings. When we first started out,
+                Founded in 2002, Crystal Elegance has come a long way from its beginnings. When we first started out,
                 our passion for beautiful gemstones and elegant designs drove us to start our own business.
                 We hope you enjoy our products as much as we enjoy offering them to you.
               </Typography>
@@ -33,7 +33,7 @@ function AboutUs() {
               </Typography>
             </Box>
             <Box sx={{ textAlign: 'center' }}>
-              <img src={footerLogo} alt="Logo" style={{ height: '17vh', objectFit: 'contain',paddingBottom: 100 }} />
+              <img src={footerLogo} alt="Logo" style={{ height: '20vh', objectFit: 'contain',paddingBottom: 70 }} />
               <Typography variant="body2" sx={{ color: 'black' }}>
                 &copy; {new Date().getFullYear()} Crystal Elegance.
               </Typography>
