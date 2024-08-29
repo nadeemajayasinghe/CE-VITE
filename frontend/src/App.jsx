@@ -17,7 +17,7 @@ import UpdateUser from './Components/Admin/Users/UpdateUser';
 import JewelleryDetails from './Components/Admin/Jewellery/JewelleryDetails';
 import AddJewellery from './Components/Admin/Jewellery/AddJewellery';
 import UpdateJewellery from './Components/Admin/Jewellery/UpdateJewellery';
-
+import JewelleryProfile from './Components/Home/JewelleryProfile';
 
 import InventoryDetails from './Components/Admin/Inventory/InventoryDetails'; 
 import AddInventory from './Components/Admin/Inventory/AddInventory'; 
@@ -71,6 +71,8 @@ function App() {
         <Route path='/About' element={<AboutUs/>}/>
         <Route path='/Contact' element={<Contact/>}/>
         <Route path='/signup' element={<Register/>}/>
+        <Route path="/jewellery/:id" element={<JewelleryProfile/>} />
+
 
 
         <Route path="/admindashboard" element={<AdminDashboard />}>
@@ -82,6 +84,7 @@ function App() {
           <Route path="jewellery/:JID" element={<Jewellery />} />
           <Route path="add-jewellery" element={<AddJewellery />} />
           <Route path="update-jewellery/:JID" element={<UpdateJewellery />} />
+
 
           <Route path="inventory-management" element={<InventoryDetails />} />
           <Route path="inventory/:id" element={<Inventory />} />
