@@ -1,16 +1,16 @@
-const User = require('../Model/UserModel'); // Adjust the path as needed
+const User = require('../Model/UserModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 // Generate user ID with leading zeros
 const generateUserId = async () => {
     const lastUser = await User.findOne().sort({ userId: -1 }).limit(1);
-    const lastId = lastUser ? parseInt(lastUser.userId.slice(1), 10) : 0; // Remove prefix if any
-    const newId = (lastId + 1).toString().padStart(3, '0'); // Pad with zeros
-    return `U${newId}`; // Prefix with 'U' or any other identifier
+    const lastId = lastUser ? parseInt(lastUser.userId.slice(1), 10) : 0;
+    const newId = (lastId + 1).toString().padStart(3, '0');
+    return `U${newId}`;
 };
 
-// Login user
 // Login user
 exports.loginUser = async (req, res) => {
     try {
@@ -28,24 +28,39 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Send user details excluding password
+        // Generate JWT token
+        const token = jwt.sign(
+            {
+                userId: user._id,
+                role: user.role,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        // Send the token and user details excluding password
         const { password: pwd, ...userData } = user.toObject();
-        res.status(200).json({ user: userData });
+        res.status(200).json({ success: true, token, user: userData });
     } catch (error) {
         res.status(500).json({ message: 'Error logging in user', error: error.message });
     }
 };
-
 
 // Create a new user
 exports.createUser = async (req, res) => {
     try {
         const { userName, name, email, password, phone, type } = req.body;
 
+        // Check if email or username already exists
+        const existingUser = await User.findOne({ $or: [{ userName }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username or Email already exists' });
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const userId = await generateUserId(); // Generate new user ID
+        const userId = await generateUserId();
         const newUser = new User({ userId, userName, name, email, password: hashedPassword, phone, type });
         await newUser.save();
 
@@ -58,7 +73,7 @@ exports.createUser = async (req, res) => {
 // Get all users
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().select('-password'); // Exclude password from the response
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving users', error: error.message });
@@ -68,7 +83,7 @@ exports.getAllUsers = async (req, res) => {
 // Get a single user by ID
 exports.getUserById = async (req, res) => {
     try {
-        const user = await User.findOne({ userId: req.params.id }); // Use userId instead of _id
+        const user = await User.findOne({ userId: req.params.id }).select('-password'); // Exclude password
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -90,9 +105,9 @@ exports.updateUser = async (req, res) => {
         }
 
         const updatedUser = await User.findOneAndUpdate(
-            { userId: req.params.id }, // Use userId instead of _id
+            { userId: req.params.id },
             updateData,
-            { new: true } // Return the updated user
+            { new: true }
         );
 
         if (!updatedUser) {
@@ -108,7 +123,7 @@ exports.updateUser = async (req, res) => {
 // Delete a user by ID
 exports.deleteUser = async (req, res) => {
     try {
-        const deletedUser = await User.findOneAndDelete({ userId: req.params.id }); // Use userId instead of _id
+        const deletedUser = await User.findOneAndDelete({ userId: req.params.id });
         if (!deletedUser) {
             return res.status(404).json({ message: 'User not found' });
         }

@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "concurrently \"vite\" \"nodemon ../backend/server.js\"",
+ "scripts": {
+    "start": "vite", 
+    "dev": "concurrently \"vite\" \"npm run backend\"",
     "lint": "eslint .",
     "preview": "vite preview",
-    "backend": "nodemon backend/server.js"
-  },
+    "backend": "nodemon ../backend/server.js"
+},
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
