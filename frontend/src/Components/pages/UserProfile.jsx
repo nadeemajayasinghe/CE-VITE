@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // If using React Router v6
 import { Box, Button, Container, Grid, Typography, Paper, Avatar, TextField, IconButton } from '@mui/material';

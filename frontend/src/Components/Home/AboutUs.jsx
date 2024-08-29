@@ -33,7 +33,7 @@ function AboutUs() {
               </Typography>
             </Box>
             <Box sx={{ textAlign: 'center' }}>
-              <img src={footerLogo} alt="Logo" style={{ height: '17vh', objectFit: 'contain' }} />
+              <img src={footerLogo} alt="Logo" style={{ height: '17vh', objectFit: 'contain',paddingBottom: 100 }} />
               <Typography variant="body2" sx={{ color: 'black' }}>
                 © {new Date().getFullYear()} Crystal Elegance.
               </Typography>
