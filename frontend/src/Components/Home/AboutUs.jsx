@@ -7,7 +7,7 @@ import { Container, Typography, Box, Grid } from '@mui/material'; // Import MUI 
 
 function AboutUs() {
   return (
-    <div>
+    <div style={{ backgroundColor: '#FAF2F2', minHeight: '100vh' }}>
       <Header />
       <Container maxWidth="md" sx={{ paddingY: 5 }}>
         <Typography variant="h3" component="h1" gutterBottom align="center">
@@ -35,7 +35,7 @@ function AboutUs() {
             <Box sx={{ textAlign: 'center' }}>
               <img src={footerLogo} alt="Logo" style={{ height: '17vh', objectFit: 'contain',paddingBottom: 100 }} />
               <Typography variant="body2" sx={{ color: 'black' }}>
-                © {new Date().getFullYear()} Crystal Elegance.
+                &copy; {new Date().getFullYear()} Crystal Elegance.
               </Typography>
             </Box>
 
