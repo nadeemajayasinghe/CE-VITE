@@ -1,9 +1,9 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Auth/AuthContext';
 import Navbar from '../Navbar/Navbar';
-import Footer from '../Footer/Footer'; // Import Footer component
+import Footer from '../Footer/Footer';
 import { Box, Button, Container, Grid, TextField, Typography, Paper, Divider } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
@@ -11,15 +11,11 @@ import Logo from '../Images/3.png';
 
 function Login() {
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
     const [user, setUser] = useState({
         name: "",
         password: "",
     });
-
-    const defaultAdmin = {
-        name: "admin",
-        password: "admin@123"
-    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -31,49 +27,46 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            if (user.name === defaultAdmin.name) {
-                if (user.password === defaultAdmin.password) {
-                    alert("Admin Login Successfully");
+            const response = await axios.post("http://localhost:4000/auth/login", {
+                name: user.name,
+                password: user.password,
+            });
+
+            if (response.status === 200) {
+                const { token, user: loggedInUser } = response.data;
+
+                login(token, loggedInUser);
+
+                if (loggedInUser.type === "admin") {
+                    alert("Admin Login Successful");
                     navigate("/admindashboard");
                 } else {
-                    alert("Login Error: Incorrect admin password");
+                    alert("User Login Successful");
+                    navigate("/userprofile");
                 }
             } else {
-                const response = await sendRequest();
-                if (response.status === "ok") {
-                    alert("Login Successfully");
-                    if (response.role === "user") {
-                        navigate("/admindashboard");
-                    } else {
-                        navigate("/home");
-                    }
-                } else {
-                    alert("Login Error");
-                }
+                alert("Login Error: " + response.data.message);
             }
         } catch (err) {
-            alert("Error: " + err.message);
+            if (err.response && err.response.status === 404) {
+                alert("User not found");
+            } else if (err.response && err.response.status === 400) {
+                alert("Invalid credentials");
+            } else {
+                alert("Error: " + err.message);
+            }
         }
-    };
-
-    const sendRequest = async () => {
-        return axios.post("http://localhost:4000/login", {
-            name: user.name,
-            password: user.password,
-        })
-        .then((res) => res.data);
     };
 
     return (
         <Box sx={{ backgroundColor: '#FAF2F2', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Navbar />
             <Container sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingY: 5 }}>
-                <Paper elevation={6} sx={{ paddingRight: 4, paddingLeft: 4,paddingTop: 4, borderRadius: 2, maxWidth: 900 }}>
+                <Paper elevation={6} sx={{ paddingRight: 4, paddingLeft: 4, paddingTop: 4, borderRadius: 2, maxWidth: 900 }}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={5} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8D9D9', borderRadius: 2 }}>
-                            <img src={Logo} alt="Crystal Elegance" style={{ maxWidth: '100%', paddingRight: 30,height: '50vh',paddingBottom: 30}} />
+                            <img src={Logo} alt="Crystal Elegance" style={{ maxWidth: '100%', paddingRight: 30, height: '50vh', paddingBottom: 30 }} />
                         </Grid>
                         <Grid item xs={12} sm={7}>
                             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
@@ -85,7 +78,7 @@ function Login() {
                             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
                                 <TextField
                                     fullWidth
-                                    placeholder="Name"
+                                    placeholder="Username or Email"
                                     variant="outlined"
                                     name="name"
                                     value={user.name}
@@ -95,6 +88,7 @@ function Login() {
                                         sx: { backgroundColor: '#FDF2F2', borderRadius: 2 }
                                     }}
                                     sx={{ marginBottom: 2 }}
+                                    aria-label="Username or Email"
                                 />
                                 <TextField
                                     fullWidth
@@ -109,6 +103,7 @@ function Login() {
                                         sx: { backgroundColor: '#FDF2F2', borderRadius: 2 }
                                     }}
                                     sx={{ marginBottom: 3 }}
+                                    aria-label="Password"
                                 />
                                 <Button
                                     type="submit"
