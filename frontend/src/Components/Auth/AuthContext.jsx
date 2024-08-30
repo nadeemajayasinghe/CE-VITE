@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -27,10 +26,16 @@ export const AuthProvider = ({ children }) => {
                         user: response.data,
                     }));
                 } catch (error) {
-                    console.log('Error fetching user profile:', error);
+                    console.error('Error fetching user profile:', error);
+                    // Handle token expiration or invalid token
+                    if (error.response?.status === 401) {
+                        logout();
+                    }
                 }
             }
         };
+
+        // Fetch user profile if token is available
         fetchUserProfile();
     }, [authState.token]);
 
@@ -50,4 +55,3 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
-

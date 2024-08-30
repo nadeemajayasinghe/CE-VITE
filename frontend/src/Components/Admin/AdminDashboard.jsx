@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, CssBaseline, Box, Toolbar, Typography } from '@mui/material';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -12,13 +11,16 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import { AuthContext } from '../Auth/AuthContext'; // Import your AuthContext
+
 
 const drawerWidth = 240;
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  
+  const { logout } = useContext(AuthContext); // Access logout function from AuthContext
+
   const [currentTab, setCurrentTab] = useState('');
 
   const menuItems = [
@@ -32,7 +34,6 @@ function AdminDashboard() {
     { text: 'Order Management', icon: <ShoppingCartIcon />, path: '/admindashboard/order-management' },
     { text: 'Feedback Management', icon: <FeedbackIcon />, path: '/admindashboard/feedback-management' },
     { text: 'Support Management', icon: <SupportAgentIcon />, path: '/admindashboard/support-management' },
-
   ];
 
   useEffect(() => {
@@ -49,8 +50,8 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    // Clear any session or authentication data here if applicable
-    navigate('/'); // Redirect to home page
+    logout(); // Call logout function from AuthContext
+    navigate('/login'); // Redirect to login page or home page
   };
 
   return (

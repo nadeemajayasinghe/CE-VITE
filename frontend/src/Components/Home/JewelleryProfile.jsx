@@ -1,10 +1,12 @@
-import Header from '../Navbar/Navbar'
-import Footer from '../Footer/Footer'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Container, Typography, Button, Grid, Card, CardMedia, CardContent, Box } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Container, Typography, Button, Grid, Card, CardMedia, CardContent, Box, Snackbar, Alert, IconButton } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import Header from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
 import AddFeedback from '../Admin/Feedback/AddFeedback2'; // Ensure you have this component
+import { AuthContext } from '../Auth/AuthContext'; // Import AuthContext
+import CloseIcon from '@mui/icons-material/Close'; // Import Close icon
 
 const JewelleryProfile = () => {
   const [jewellery, setJewellery] = useState(null);
@@ -13,7 +15,11 @@ const JewelleryProfile = () => {
   const [noResults, setNoResults] = useState(false);
   const [showAddFeedbackForm, setShowAddFeedbackForm] = useState(false);
   const [images, setImages] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const URL = 'http://localhost:4000/feedback';
+  const { authState } = useContext(AuthContext); // Access authentication state
+  const navigate = useNavigate(); // Use navigate for redirection
 
   // Fetch jewellery details
   useEffect(() => {
@@ -43,13 +49,32 @@ const JewelleryProfile = () => {
     }
   }, [jewellery]);
 
+  const handleAddToBag = () => {
+    if (!authState.user) {
+      setSnackbarMessage('You need to be logged in to add items to the bag.');
+      setSnackbarOpen(true);
+    } else {
+      // Logic for adding to bag
+      alert('Added to bag!');
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleRedirectToLogin = () => {
+    navigate('/login');
+    setSnackbarOpen(false); // Close the Snackbar after redirecting
+  };
+
   if (!jewellery) return <div>Loading...</div>;
 
   return (
     <div>
-      <Header/>
+      <Header />
       <Container>
-        <br/>
+        <br />
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Card>
@@ -61,9 +86,17 @@ const JewelleryProfile = () => {
                 title={jewellery.name}
               />
               <CardContent>
-                {images.length > 1 && (
-                  <Carousel images={images} />
-                )}
+                {/* Display images as a list if carousel is not available */}
+                <Box sx={{ display: 'flex', overflowX: 'auto' }}>
+                  {images.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Image ${index}`}
+                      style={{ width: '100%', maxWidth: '300px', marginRight: '10px' }}
+                    />
+                  ))}
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -71,13 +104,13 @@ const JewelleryProfile = () => {
             <Typography variant="h3">{jewellery.name}</Typography>
             <Typography variant="body1">{jewellery.description}</Typography>
             <Typography variant="h4">Rs {jewellery.price}</Typography>
-            <br/><br/><br/><br/>
-            <Button variant="contained" color="secondary">Add to Bag</Button>
-            <br/><br/>
+            <br /><br /><br /><br />
+            <Button variant="contained" color="secondary" onClick={handleAddToBag}>Add to Bag</Button>
+            <br /><br />
             <Button variant="outlined">Contact Customer Care</Button>
-            <br/><br/>
+            <br /><br />
             <Button variant="outlined" color="primary" onClick={() => alert('Added to wishlist!')}>Add to Wishlist</Button>
-            <br/><br/>
+            <br /><br />
             <Button variant="outlined" color="secondary" onClick={() => setShowAddFeedbackForm(!showAddFeedbackForm)}>
               {showAddFeedbackForm ? 'Cancel' : 'Add Feedback'}
             </Button>
@@ -109,9 +142,23 @@ const JewelleryProfile = () => {
           )}
         </Box>
       </Container>
-      <Footer/>
+      <Footer />
+
+      {/* Snackbar for alerts */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={null} // Disable auto-hide for custom action
+        onClose={handleSnackbarClose}
+        action={
+          <Button color="inherit" onClick={handleRedirectToLogin}>OK</Button>
+        }
+      >
+        <Alert onClose={handleSnackbarClose} severity="info" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
-  )
+  );
 }
 
 export default JewelleryProfile;
