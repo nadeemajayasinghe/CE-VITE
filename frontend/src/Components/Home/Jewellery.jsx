@@ -58,7 +58,7 @@ function JewelleryPage() {
   ];
 
   return (
-    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#FAF2F2', minHeight: '100vh' }}>
       <Header />
       <br></br>
       <Container>
@@ -113,7 +113,7 @@ function JewelleryPage() {
           ))}
         </Grid>
 
-        <Typography variant="h4" align="left" gutterBottom sx={{ marginTop: '20px', fontWeight: 'bold' }}>
+        <Typography variant="h4" align="left" gutterBottom sx={{ marginTop: '20px', fontWeight: 'bold', marginBottom: '120px' }}>
           Swipe into our everyday wear collection
         </Typography>
         <Swiper
@@ -145,7 +145,7 @@ function JewelleryPage() {
                   <CardMedia
                     component="img"
                     alt={item.name}
-                    height="290"
+                    height="300"
                     image={item.image || 'http://localhost:5173/src/Components/Images/3.png'}
                     title={item.name}
                   />
