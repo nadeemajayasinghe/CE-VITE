@@ -10,5 +10,6 @@ const JewellerySchema = new mongoose.Schema({
   description: { type: String }
 });
 
+
 module.exports = mongoose.model('Jewellery', JewellerySchema);
 
